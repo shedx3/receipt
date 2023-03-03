@@ -1,0 +1,140 @@
+.header {
+  height: 70px;
+  width: 100%;
+  border-bottom: 1px solid #700cb3;
+}
+
+.logo {
+  position: relative;
+  top: -20px;
+  width: 10%;
+  margin-left: 25px;
+}
+
+.container1 {
+  display: flex;
+}
+
+/* form {
+  border: 2px solid #700cb3;
+  margin-left: 100px;
+  margin-top: 110px;
+  width: 430px;
+  border-radius: 20px;
+} */
+.item{
+  border: 2px solid #700cb3;
+  margin-left: 100px;
+  margin-top: 110px;
+  width: 430px;
+  padding:20px 20px;
+  border-radius: 20px;}
+h2 {
+  padding-top: 20px;
+  padding-left: 60px;
+}
+
+p {
+  margin-top: -10px;
+  padding-left: 60px;
+}
+
+.firstname {
+  margin-left: 60px;
+  min-width: 280px;
+  height: 30px;
+  border-radius: 3px;
+  padding-left: 10px;
+  border: 1px solid #700cb3;
+}
+
+.lastname {
+  margin-left: 60px;
+  min-width: 280px;
+  height: 30px;
+  border-radius: 3px;
+  padding-left: 10px;
+  border: 1px solid #700cb3;
+}
+
+.email {
+  margin-left: 60px;
+  min-width: 280px;
+  height: 30px;
+  border-radius: 3px;
+  padding-left: 10px;
+  border: 1px solid #700cb3;
+}
+
+.password {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 60px;
+  width: 280px;
+  height: 30px;
+  border-radius: 3px;
+  padding-left: 10px;
+  border: 1px solid #700cb3;
+  margin-bottom: 25px;
+}
+.fa-solid {
+  margin-top: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+.passw {
+  border: none;
+  height: 100%;
+  width: 100%;
+}
+
+.cpassword {
+  margin-left: 60px;
+  min-width: 280px;
+  height: 30px;
+  border-radius: 3px;
+  padding-left: 10px;
+  border: 1px solid #700cb3;
+}
+
+.submit {
+  color: white;
+  background-color: #700cb3;
+  margin-left: 60px;
+  border-radius: 3px;
+  margin-bottom: 28px;
+}
+
+/* .text-danger {
+  height: 1px;
+} */
+.submit:disabled {
+  background-color: grey;
+  opacity: 0.9;
+  color: white;
+  cursor: not-allowed;
+}
+
+.extra {
+  margin-left: 100px;
+  margin-top: -25px;
+}
+
+input,
+form {
+  margin-bottom: 25px;
+}
+input:focus {
+  outline: none;
+}
+.login {
+  color: blue;
+  cursor: pointer;
+}
+
+.signupimg {
+  width: 95%;
+  height: 80%;
+  margin-top: 35px;
+  margin-left: 7px;
+}

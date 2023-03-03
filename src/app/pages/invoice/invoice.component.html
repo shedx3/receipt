@@ -1,1 +1,32 @@
-<p>invoice works!</p>
+<form [formGroup]="signup">
+
+      <h2>Sign-up</h2>
+      <p>Please fill this form to create an account</p>
+     
+      <input type="date" class="firstname" placeholder="send" formControlName="date"  />
+      <input type="date" class="lastname" placeholder="due" formControlName="dueDate" />
+      <input type="text" class="email" placeholder="sender" formControlName="name" />
+      <input type="email" class="email" placeholder="E-mail" formControlName="email" />
+    <div  class="item" formArrayName="arrayData">
+      <div  *ngFor="let group of arrayData.controls; index as i">
+        <ng-container [formGroupName]="i">
+       <input type="text" class="email" placeholder="item_name" formControlName="item_name" />
+      <input type="text" class="email" placeholder="description" formControlName="description" />
+      <input type="text" class="email" placeholder="quantity" formControlName="quantity" [(ngModel)]="quantity"/>
+      <input type="text" class="email" placeholder="rate" formControlName="rate" [(ngModel)]="rate"/>
+       <div >Total: {{quantity * rate}}</div>
+
+          <button (click)="addItem()"> Add Item</button>
+          <button (click)="removeItem(i)"> Remove Item</button>
+      </ng-container>
+      </div>
+    
+    </div>
+
+
+      
+    
+<button (click)="testSubmit()" [disabled]="signup.invalid" type="submit" value="SIGN UP">yes</button>
+
+
+    </form>

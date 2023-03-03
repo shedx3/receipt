@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { ReactiveFormsModule,FormsModule } from '@angular/forms';
 import { PagesRoutingModule } from './pages-routing.module';
 import { InvoiceComponent } from './invoice/invoice.component';
 
@@ -11,7 +11,8 @@ import { InvoiceComponent } from './invoice/invoice.component';
   ],
   imports: [
     CommonModule,
-    PagesRoutingModule
+    PagesRoutingModule,
+    ReactiveFormsModule,FormsModule
   ]
 })
 export class PagesModule { }
