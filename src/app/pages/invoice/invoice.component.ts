@@ -1,5 +1,6 @@
 
 import { Component,OnInit} from '@angular/core';
+import { debounceTime } from 'rxjs/operators';
 
 import {
   FormArray,
@@ -20,10 +21,13 @@ import Swal from 'sweetalert2';
 export class InvoiceComponent {
   signup: any = FormGroup;
   error: any = null;
-  quantity: any = '';
-  rate: any = '';
+  quantity: number = 0;
+  rate: number = 0;
+  item_total: number = 0;
   spinner: boolean = false;
   errorMessage: any;
+  discountShown: boolean = false;
+  taxShown: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -33,26 +37,58 @@ export class InvoiceComponent {
 
   ngOnInit(): void {
     this.signup = this.fb.group({
-      date: new FormControl('2020-20-1', Validators.required),
-      dueDate: new FormControl('', Validators.required),
-      name: new FormControl('', Validators.required),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      date: new FormControl('', Validators.required),
+      image: new FormControl('', Validators.required),
+      due_date: new FormControl('', Validators.required),
+      sender: new FormControl('', Validators.required),
+      send_email: new FormControl('', [Validators.required, Validators.email]),
+      receiver: new FormControl('', Validators.required),
+      receiver_email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+      ]),
       item: this.fb.array([this.ItemGroup]),
+      sub_total: new FormControl('', Validators.required),
+      total: new FormControl('', Validators.required),
+
     });
+
+    const quantity = this.ItemGroup.get('quantity');
+    const rate = this.ItemGroup.get('rate');
+    const item_total = this.ItemGroup.get('item_total');
+
+    quantity?.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe((value) => {
+        const rate = this.ItemGroup.get('rate');
+        const newValue = value * rate?.value  // example transformation
+        item_total?.setValue(newValue, { emitEvent: false });
+        console.log(value)
+      });
+
+      rate?.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe((value) => {
+        const quantity = this.ItemGroup.get('quantity');
+        const newValue = value * quantity?.value // example transformation
+        item_total?.setValue(newValue, { emitEvent: false });
+        console.log(value)
+      });
+
   }
 
   get arrayData(): FormArray {
     return this.signup.controls['item'] as FormArray;
   }
 
-  ItemGroup() {
-    return this.fb.group({
+  ItemGroup: FormGroup = this.fb.group({
       item_name: new FormControl('', Validators.required),
       description: new FormControl(),
       quantity: new FormControl('', Validators.required),
       rate: new FormControl('', Validators.required),
+      item_total: new FormControl('', Validators.required)
     });
-  }
+  
   // get itemArray() {
   //   return <FormArray>this.signup.get('item');
   // }
@@ -67,8 +103,8 @@ export class InvoiceComponent {
     this.arrayData.push(form);
     // this.itemArray.push(this.ItemGroup());
   }
-  removeItem(index: any) {
-    // this.itemArray.removeAt(index);
+  removeItem(index: number) {
+    this.arrayData.removeAt(index);
   }
   testSubmit() {
     console.log(this.signup.value);
@@ -99,4 +135,22 @@ export class InvoiceComponent {
       },
     });
   }
+
+  // get quantity() {
+  //   return this.ItemGroup().controls.quantity.value
+  // }
+
+  // get rate() {
+  //   return this.ItemGroup().controls['rate'].value
+  // }
+
+  changeVal(e:any, field:any) {
+    if (field === 'quantity') {
+      this.quantity = e.target.value
+    } else if (field === 'rate') {
+      this.rate = e.target.value
+    }
+    this.item_total = this.quantity * this.rate
+  }
+
 }

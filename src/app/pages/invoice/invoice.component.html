@@ -1,32 +1,152 @@
-<form [formGroup]="signup">
+ <div class="container">
+        <div class="top-btn-container">
+            <div class="right-btn-container">
+                <button class="invoice-btn">New invoice +</button>
+            </div>
+            <div class="left-btn-container">
+                <button class="login-btn">Log in</button>
+                <button class="signup-btn">Sign up</button>
+            </div>
+        </div>
 
-      <h2>Sign-up</h2>
-      <p>Please fill this form to create an account</p>
-     
-      <input type="date" class="firstname" placeholder="send" formControlName="date"  />
-      <input type="date" class="lastname" placeholder="due" formControlName="dueDate" />
-      <input type="text" class="email" placeholder="sender" formControlName="name" />
-      <input type="email" class="email" placeholder="E-mail" formControlName="email" />
-    <div  class="item" formArrayName="arrayData">
-      <div  *ngFor="let group of arrayData.controls; index as i">
-        <ng-container [formGroupName]="i">
-       <input type="text" class="email" placeholder="item_name" formControlName="item_name" />
-      <input type="text" class="email" placeholder="description" formControlName="description" />
-      <input type="text" class="email" placeholder="quantity" formControlName="quantity" [(ngModel)]="quantity"/>
-      <input type="text" class="email" placeholder="rate" formControlName="rate" [(ngModel)]="rate"/>
-       <div >Total: {{quantity * rate}}</div>
 
-          <button (click)="addItem()"> Add Item</button>
-          <button (click)="removeItem(i)"> Remove Item</button>
-      </ng-container>
-      </div>
-    
+        <form [formGroup]="signup">  
+        <div class="cloud">
+        <div class="file-input-container">
+             <input type="file" id="file-input" formControlName="image" name="image">
+             <label for="image" class="file-input-label">
+                 
+                 <img src="../../../assets/images/Group 11.png" alt="" srcset="">
+                
+                 </label>
+                    </div>
+        </div>
+        <div class="invoice">
+            <div class="left">
+                <div class="date">
+                    <label for="date">Date:</label>
+                    <input type="date" name="date"  formControlName="date" >
+                </div>
+                <div class="mid-text">
+                    <!-- image -->
+                   
+
+                    <h3>Invoice no</h3>
+                    <span>#00000</span>
+                </div>
+                <div class="due-date">
+                    <label for="date">Due Date:</label>
+                    <input type="date" id="date"  formControlName="due_date">
+                </div>
+            </div>
+
+            <div class="billing-form">
+                <div class="bil-from">
+                    <label for="billed from">Billed From<span>*</span></label><br>
+                    <input type="email"  placeholder="Email" formControlName="send_email">
+                    <input type="text"  placeholder="Who is this invoice from?" formControlName="sender">
+
+                </div>
+                <div class="bil-to">
+                    <label for="billed from">Billed to<span>*</span></label><br>
+                    <input type="email"  placeholder="Email"  formControlName="receiver_email">
+                    <input type="text"  placeholder="Who is this invoice to?" formControlName="receiver">
+
+                </div>
+            </div>
+
+            <div class="table">
+                <div class="row">
+                    <div class="col">
+                        <span>ITEM</span>
+                    </div>
+                    <div class="col-quantity">
+                        <span>QTY</span>
+                    </div>
+                    <div class="col-rate">
+                        <span>RATE</span>
+                    </div>
+                    <div class="col-total">
+                        <span>TOTAL</span>
+                    </div>
+                    <!-- <div class="col-action">
+                        <span>ACTION</span>
+                    </div> -->
+                </div>
+                <div formArrayName="item">
+                    <div *ngFor="let group of arrayData.controls; let i = index">
+                        <div class="item-row" [formGroupName]="i">
+                            <div class="col">
+                                <input type="text" placeholder="item name" formControlName="item_name">
+                                <input type="text"  placeholder="description" formControlName="description">
+                            </div>
+                            <div class="col-quantity">
+                                <input type="text" (change)="changeVal($event, 'quantity')" placeholder="0" formControlName="quantity">
+                            </div>
+                            <div class="col-rate">
+                                <input type="text" (change)="changeVal($event, 'rate')" placeholder="NGN 0.00" formControlName="rate">
+                            </div>
+                            <div class="col-total">
+                                <input type="text" placeholder="0.00" formControlName="item_total">
+                                <!-- <p>{{ItemGroup.get('quantity')?.value}}</p> -->
+                            </div>
+                            <div class="col-action">
+                            <button type="button" (click)="removeItem(i)" class="delete" > <i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-row1">
+                    <div class="col">
+                        <button (click)="addItem()" class="add-options">Add Item <i class="fa-solid fa-plus"></i></button>
+                    
+                    </div>
+                    <div class="col-quantity1">
+                        <p>Sub Total</p>
+                     
+                    <div class="options">
+                        <div class="options-item">
+                            <button (click)="discountShown = true" class="add-options"> Add discount <i class="fa-solid fa-plus"></i> </button>
+                            <div *ngIf="discountShown" class="options-input-group">
+                                <input type="text" placeholder="discount">
+                                <i (click)="discountShown = false" class="fa-solid fa-trash"></i>
+                            </div>
+                        </div>
+                        <div class="options-item">
+                            <button (click)="taxShown = true" class="add-options"> Add Tax <i class="fa-solid fa-plus"></i></button>
+                            <div *ngIf="taxShown" class="options-input-group">
+                                <input type="text" placeholder="tax">
+                                <i (click)="taxShown = false" class="fa-solid fa-trash"></i>
+                            </div>
+                        </div>
+                    </div>
+                       
+                    </div>
+                      <div class="sub-total">
+                        <input type="text" placeholder="0.00" readonly>
+                    </div>
+                </div>
+                <div class="item-row2">
+                    <div class="col-quantity3">
+                        <p>TOTAL</p>
+                    </div>
+                    <div class="total">
+                        <input type="text" name="total" placeholder="0.00" formControlName="total">
+                    </div>
+                    <div class="col-action">
+
+                    </div>
+                </div>
+                <div class="note-container">
+                    <label>Notes</label>
+                    <input type="text" placeholder="Thank you for your business">
+                </div>
+            </div>
+            <div class="bottom-btn-container">
+                <button class="download-btn">Download<i class="fa-solid fa-download"></i></button>
+                <button class="send-btn"> <span class="space"><i class="fa-sharp fa-solid fa-paper-plane"></i></span>  Send Invoice </button>
+            </div>
+
+        </div>
+        </form>
     </div>
-
-
-      
-    
-<button (click)="testSubmit()" [disabled]="signup.invalid" type="submit" value="SIGN UP">yes</button>
-
-
-    </form>
