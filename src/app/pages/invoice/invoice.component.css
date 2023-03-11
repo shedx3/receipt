@@ -246,18 +246,34 @@
   color: #f7a31d;
   cursor: pointer;
 }
+.display{
+  border-radius: 50%;
+  /* width: 100px;
+  height: 100px; */
+  
+}
+.no-scroll::-webkit-inner-spin-button,
+.no-scroll::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+  outline: none;
+}
+
 .sub-total input {
   width: 80%;
   padding: 10px 0;
   border: none;
   /* margin-top: 10px; */
 }
+#total{
+  outline: none;
+}
 .delete {
   margin: 20px;
   background: none !important;
   border: none;
   padding: 0 !important;
-  color: red;
+  color: black;
 
   cursor: pointer;
 }
@@ -351,3 +367,10 @@
 /* .send-btn:hover {
 
 } */
+
+.send-btn:disabled {
+  background-color: grey;
+  opacity: 0.9;
+  color: white;
+  cursor: not-allowed;
+}
