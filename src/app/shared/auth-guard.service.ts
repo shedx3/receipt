@@ -18,8 +18,8 @@ export class AuthGuardService {
   }
 
   // Registeration
-  registerUsers(data: any) {
-    return this.apiHandler.post('user', data);
+  createInvoice(data: any) {
+    return this.apiHandler.post('invoice/create', data);
   }
   fetchUsers(data: any) {
     return this.apiHandler.get('user', data);

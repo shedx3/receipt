@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiHandlerService {
-  private baseUrl = 'https://kwiz-api.herokuapp.com';
+  private baseUrl = 'http://localhost:4000';
   private token = localStorage.getItem('token');
 
   constructor(private httpclient: HttpClient) {}

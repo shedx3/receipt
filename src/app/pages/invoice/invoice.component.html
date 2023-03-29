@@ -9,7 +9,7 @@
     </div>
   </div>
 
-  <form [formGroup]="signup">
+  <form [formGroup]="createInvoice">
     <div class="cloud">
       <div class="file-input-container">
         <input
@@ -35,7 +35,7 @@
       <div class="left">
         <div class="date">
           <label for="date">Date:</label>
-          <input type="date" name="date" formControlName="date" />
+          <input type="date" name="date" formControlName="sendDate"  pattern="\d{4}-\d{2}-\d{2}"/>
         </div>
         <div class="mid-text">
           <!-- image -->
@@ -45,7 +45,7 @@
         </div>
         <div class="due-date">
           <label for="date">Due Date:</label>
-          <input type="date" id="date" formControlName="due_date" />
+          <input type="date" id="date" formControlName="dueDate"  pattern="\d{4}-\d{2}-\d{2}"/>
         </div>
       </div>
 
@@ -56,7 +56,7 @@
           <input
             type="email"
             placeholder="Email"
-            formControlName="send_email"
+            formControlName="senderEmail"
           />
           <input
             type="text"
@@ -70,7 +70,7 @@
           <input
             type="email"
             placeholder="Email"
-            formControlName="receiver_email"
+            formControlName="receiverEmail"
           />
           <input
             type="text"
@@ -89,7 +89,7 @@
             <span>QTY</span>
           </div>
           <div class="col-rate">
-            <span>RATE</span>
+            <span>PRICE</span>
           </div>
           <div class="col-total">
             <span>TOTAL</span>
@@ -98,7 +98,7 @@
                         <span>ACTION</span>
                     </div> -->
         </div>
-        <div formArrayName="item">
+        <div formArrayName="items">
           <div
             *ngFor="let group of arrayData.controls; let i = index"
             [formGroupName]="i"
@@ -108,7 +108,7 @@
                 <input
                   type="text"
                   placeholder="item name"
-                  formControlName="item_name"
+                  formControlName="itemName"
                 />
                 <input
                   type="text"
@@ -123,7 +123,7 @@
                 <input
                   type="number"
                   placeholder="NGN 0.00"
-                  formControlName="rate"
+                  formControlName="price"
                   class="no-scroll"
                 />
               </div>
@@ -133,7 +133,7 @@
                 class="no-scroll"
                   type="number"
                   placeholder="0.00"
-                  formControlName="item_total"
+                  formControlName="Total"
                   readonly
                 />
               </div>
@@ -185,7 +185,7 @@
               type="number"
               placeholder="0.00"
               readonly
-              formControlName="sub_total"
+              formControlName="subTotal"
             />
           </div>
         </div>
@@ -214,7 +214,7 @@
         <button class="download-btn">
           Download<i class="fa-solid fa-download"></i>
         </button>
-        <button class="send-btn" (click)="testSubmit() " [disabled]=signup.invalid type="submit">
+        <button class="send-btn" (click)="submit() " [disabled]="createInvoice.invalid" type="submit">
           <span class="space"
             ><i class="fa-sharp fa-solid fa-paper-plane"></i
           ></span>
