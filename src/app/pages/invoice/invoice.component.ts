@@ -149,26 +149,34 @@ export class InvoiceComponent {
     console.log(this.createInvoice.value);
   }
 
-  fileSelect($event: any) {
-    const target = $event.target;
-    const file: any = $event.target.files[0];
+  fileSelect(event: any) {
+  this.base64 = <File>event.target.files[0];
+  console.log('selected', this.base64);   
 
-    if (file) {
-      let reader = new FileReader();
-      reader.readAsDataURL($event.target.files[0]);
-
-      reader.onload = (e) => {
-        this.base64 = reader.result as string;
-        console.log(this.base64);
-      };
-    }
+  
   }
 
   submit() {
+   const addCurrentEvent = new FormData();
     console.log(this.base64);
 
-    this.createInvoice.patchValue({ image: this.base64 });
-    this.authService.createInvoice(this.createInvoice.value).subscribe({
+    if (this.base64) {
+      addCurrentEvent.append('image', this.base64);
+      addCurrentEvent.append('sendDate', this.createInvoice.value.sendDate);
+      addCurrentEvent.append('dueDate', this.createInvoice.value.dueDate);
+      addCurrentEvent.append('sender', this.createInvoice.value.sender);
+      addCurrentEvent.append('senderEmail', this.createInvoice.value.senderEmail);
+      addCurrentEvent.append('receiver', this.createInvoice.value.receiver);
+      addCurrentEvent.append('receiver', this.createInvoice.value.receiverEmail);
+      addCurrentEvent.append('discount', this.createInvoice.value.discount);
+      addCurrentEvent.append('tax', this.createInvoice.value.tax);
+      addCurrentEvent.append('subTotal', this.createInvoice.value.subTotal);
+      addCurrentEvent.append('grandTotal', this.createInvoice.value.GrandTotal);
+      addCurrentEvent.append('note', this.createInvoice.value.note);
+      addCurrentEvent.append('items', this.createInvoice.value.items);
+
+    }
+    this.authService.createInvoice(addCurrentEvent).subscribe({
       next: (res) => {
         console.log(this.createInvoice.value);
         console.log(res);
