@@ -24,9 +24,9 @@
           
 
 
-        <img [src]="base64" *ngIf="base64" class="display" />
+        <img [src]="base" *ngIf="base" class="display" />
      
-          <img src="../../../assets/images/Group 11.png" alt="" srcset=""  *ngIf="!base64"/>
+          <img src="../../../assets/images/Group 11.png" alt="" srcset=""  *ngIf="!base"/>
         </label>
       </div>
       
@@ -211,7 +211,7 @@
         </div>
       </div>
       <div class="bottom-btn-container">
-        <button class="download-btn">
+        <button class="download-btn" (click)="test()">
           Download<i class="fa-solid fa-download"></i>
         </button>
         <button class="send-btn" (click)="submit() " [disabled]="createInvoice.invalid" type="submit">
