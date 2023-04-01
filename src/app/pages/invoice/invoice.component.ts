@@ -1,8 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
-import * as pdfMake from 'pdfmake/build/pdfmake';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';;
+
 import {
   FormArray,
   FormBuilder,
