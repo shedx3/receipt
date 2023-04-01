@@ -9,8 +9,11 @@ import {
   Validators,
 } from '@angular/forms';
 
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { AuthGuardService } from 'src/app/shared/auth-guard.service';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-invoice',
   templateUrl: './invoice.component.html',
@@ -26,8 +29,8 @@ export class InvoiceComponent {
   errorMessage: any;
   discountShown: boolean = false;
   taxShown: boolean = false;
-  base64: any;
-
+  base: any;
+  data: any;
   constructor(
     private fb: FormBuilder,
 
@@ -37,7 +40,7 @@ export class InvoiceComponent {
   ngOnInit(): void {
     this.createInvoice = this.fb.group({
       sendDate: new FormControl('', [Validators.required]),
-      image: new FormControl('', Validators.required),
+      businessName: new FormControl('', Validators.required),
       dueDate: new FormControl('', Validators.required),
       sender: new FormControl('', Validators.required),
       senderEmail: new FormControl('', [Validators.required, Validators.email]),
@@ -149,50 +152,52 @@ export class InvoiceComponent {
     console.log(this.createInvoice.value);
   }
 
-  fileSelect(event: any) {
-  this.base64 = <File>event.target.files[0];
+  // fileSelect(event: any) {
+  //   this.base = <File>event.target.files[0];
+  //   console.log('selected', this.base);
+  // }
 
-  console.log('selected', this.base64);   
-
-  
-  }
+  test() {}
 
   submit() {
-   const addCurrentEvent = new FormData();
-    console.log(this.base64);
-  const items = this.createInvoice.get('items') as FormArray;
-  const itemsData:any = (items.controls as FormGroup[]).map((item) => ({
-    itemName: item.get('itemName')?.value,
-    description: item.get('description')?.value,
-    quantity: item.get('quantity')?.value,
-    price: item.get('price')?.value,
-    Total: item.get('Total')?.value,
-  }));
-  
-  console.log(itemsData);
-  
-    if (this.base64) {
-      addCurrentEvent.append('image', this.base64);
-      addCurrentEvent.append('sendDate', this.createInvoice.value.sendDate);
-      addCurrentEvent.append('dueDate', this.createInvoice.value.dueDate);
-      addCurrentEvent.append('sender', this.createInvoice.value.sender);
-      addCurrentEvent.append('senderEmail', this.createInvoice.value.senderEmail);
-      addCurrentEvent.append('receiver', this.createInvoice.value.receiver);
-      addCurrentEvent.append('receiverEmail', this.createInvoice.value.receiverEmail);
-      addCurrentEvent.append('discount', this.createInvoice.value.discount);
-      addCurrentEvent.append('tax', this.createInvoice.value.tax);
-      addCurrentEvent.append('subTotal', this.createInvoice.value.subTotal);
-      addCurrentEvent.append('grandTotal', this.createInvoice.value.grandTotal);
-      
-      // addCurrentEvent.append('note', this.createInvoice.value.note);
-    addCurrentEvent.append('items', itemsData);
+    //  const addCurrentEvent = new FormData();
+    //   console.log(this.base);
+    // const items = this.createInvoice.get('items') as FormArray;
+    // const itemsData:any = (items.controls as FormGroup[]).map((item) => ({
+    //   itemName: item.get('itemName')?.value,
+    //   description: item.get('description')?.value,
+    //   quantity: item.get('quantity')?.value,
+    //   price: item.get('price')?.value,
+    //   Total: item.get('Total')?.value,
+    // }));
 
-    }
-    this.authService.createInvoice(addCurrentEvent).subscribe({
+    // if (this.base) {
+    //   addCurrentEvent.append('image', this.base);
+    //   addCurrentEvent.append('sendDate', this.createInvoice.value.sendDate);
+    //   addCurrentEvent.append('dueDate', this.createInvoice.value.dueDate);
+    //   addCurrentEvent.append('sender', this.createInvoice.value.sender);
+    //   addCurrentEvent.append(
+    //     'senderEmail',
+    //     this.createInvoice.value.senderEmail
+    //   );
+    //   addCurrentEvent.append('receiver', this.createInvoice.value.receiver);
+    //   addCurrentEvent.append('receiverEmail', this.createInvoice.value.receiverEmail);
+    //   addCurrentEvent.append('discount', this.createInvoice.value.discount);
+    //   addCurrentEvent.append('tax', this.createInvoice.value.tax);
+    //   addCurrentEvent.append('subTotal', this.createInvoice.value.subTotal);
+    //   addCurrentEvent.append('grandTotal', this.createInvoice.value.grandTotal);
+
+    //   // addCurrentEvent.append('note', this.createInvoice.value.note);
+    // addCurrentEvent.append('items', itemsData);
+    // console.log(typeof itemsData);
+    // const me = JSON.stringify(itemsData)
+    // console.log('type2',typeof me);
+
+    // // console.log(JSON.stringify(itemsData));
+
+    // }
+    this.authService.createInvoice(this.createInvoice.value).subscribe({
       next: (res) => {
-        console.log(this.createInvoice.value);
-        console.log(res);
-
         this.spinner = false;
         Swal.fire({
           title: 'Invoice created successfully!',
@@ -202,9 +207,62 @@ export class InvoiceComponent {
           showClass: { popup: 'animate__animated animate__fadeInDown' },
           hideClass: { popup: 'animate__animated animate__fadeOutUp' },
         });
-        console.log(res);
+        console.log(res.responseData.invoice.invoiceId);
+        this.data = res;
+        console.log(this.data);
 
-        this.createInvoice.reset();
+        const doc = new jsPDF();
+        const invoiceData = this.createInvoice.value;
+
+        // Set the title of the document
+        doc.setFontSize(22);
+        doc.text(`Invoice No: ${res.responseData.invoice.invoiceId}`, 70, 15);
+        doc.text(`${invoiceData.businessName}`, 100, 25);
+        // Add invoice data to the document
+        doc.setFontSize(12);
+        doc.text(`Sent on:${invoiceData.sendDate}`, 20, 30);
+        doc.text(`Due date:${invoiceData.dueDate}`, 140, 30);
+        doc.text(`Sender:${invoiceData.sender}`, 20, 40);
+        doc.text(`Sender email: ${invoiceData.senderEmail}`, 20, 50);
+        doc.text(`Receiver:${invoiceData.receiver}`, 140, 40);
+        doc.text(`Receiver email:${invoiceData.receiverEmail}`, 140, 50);
+        doc.text(`Discount: ${invoiceData.discount}%`, 20, 68);
+        doc.text(`Tax: ${invoiceData.tax}%`, 20, 73);
+
+        // Add invoice items to the document
+        const items = invoiceData.items;
+
+        const headings = ['Item', 'Description', 'Quantity', 'Price', 'Total'];
+
+        // Set up table styling
+        const tableProps = { margin: { top: 75 } };
+
+        const tableData = items.map((item: any) => [
+          item.itemName,
+          item.description || '',
+          item.quantity.toString(),
+          item.price.toString(),
+          item.Total.toString(),
+        ]);
+
+        // Add table to document
+        let lastRowHeight = 0;
+        autoTable(doc, {
+          head: [headings],
+          body: tableData,
+          startY: tableProps.margin.top,
+          margin: { left: 20 },
+        });
+
+        // Calculate and add subtotal and grand total to the document
+        const subTotal = Number(invoiceData.subTotal).toFixed(2);
+        const grandTotal = Number(invoiceData.grandTotal).toFixed(2);
+        doc.text(`Subtotal: ${subTotal}`, 150, 68);
+        doc.text(`Grand total: ${grandTotal}`, 150, 73);
+
+        doc.save('invoice.pdf');
+
+        // this.createInvoice.reset();
       },
       error: (err) => {
         Swal.fire({
@@ -217,7 +275,6 @@ export class InvoiceComponent {
         });
         this.errorMessage = err.error.message;
         this.spinner = false;
-        // console.log(err);
       },
     });
   }
