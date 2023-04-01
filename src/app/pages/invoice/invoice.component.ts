@@ -151,6 +151,7 @@ export class InvoiceComponent {
 
   fileSelect(event: any) {
   this.base64 = <File>event.target.files[0];
+
   console.log('selected', this.base64);   
 
   
@@ -159,7 +160,17 @@ export class InvoiceComponent {
   submit() {
    const addCurrentEvent = new FormData();
     console.log(this.base64);
-
+  const items = this.createInvoice.get('items') as FormArray;
+  const itemsData:any = (items.controls as FormGroup[]).map((item) => ({
+    itemName: item.get('itemName')?.value,
+    description: item.get('description')?.value,
+    quantity: item.get('quantity')?.value,
+    price: item.get('price')?.value,
+    Total: item.get('Total')?.value,
+  }));
+  
+  console.log(itemsData);
+  
     if (this.base64) {
       addCurrentEvent.append('image', this.base64);
       addCurrentEvent.append('sendDate', this.createInvoice.value.sendDate);
@@ -167,13 +178,14 @@ export class InvoiceComponent {
       addCurrentEvent.append('sender', this.createInvoice.value.sender);
       addCurrentEvent.append('senderEmail', this.createInvoice.value.senderEmail);
       addCurrentEvent.append('receiver', this.createInvoice.value.receiver);
-      addCurrentEvent.append('receiver', this.createInvoice.value.receiverEmail);
+      addCurrentEvent.append('receiverEmail', this.createInvoice.value.receiverEmail);
       addCurrentEvent.append('discount', this.createInvoice.value.discount);
       addCurrentEvent.append('tax', this.createInvoice.value.tax);
       addCurrentEvent.append('subTotal', this.createInvoice.value.subTotal);
-      addCurrentEvent.append('grandTotal', this.createInvoice.value.GrandTotal);
-      addCurrentEvent.append('note', this.createInvoice.value.note);
-      addCurrentEvent.append('items', this.createInvoice.value.items);
+      addCurrentEvent.append('grandTotal', this.createInvoice.value.grandTotal);
+      
+      // addCurrentEvent.append('note', this.createInvoice.value.note);
+    addCurrentEvent.append('items', itemsData);
 
     }
     this.authService.createInvoice(addCurrentEvent).subscribe({

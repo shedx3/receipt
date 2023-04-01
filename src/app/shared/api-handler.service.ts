@@ -7,16 +7,16 @@ import { Observable } from 'rxjs';
 })
 export class ApiHandlerService {
   private baseUrl = 'http://localhost:4000';
-  private token = localStorage.getItem('token');
+  // private token = localStorage.getItem('token');
 
   constructor(private httpclient: HttpClient) {}
 
   public header() {
     let headers = new HttpHeaders();
-    headers = headers.set('Content-Type', 'application/json');
+    // headers = headers.set('Content-Type', 'application/json');
     headers = headers.set('Accept', 'application/json');
     // headers = ['Accept'] = 'application/json';
-    headers = headers.set('Authorization', 'Bearer ' + this.token);
+    // headers = headers.set('Authorization', 'Bearer ' + this.token);
     return headers;
   }
 
