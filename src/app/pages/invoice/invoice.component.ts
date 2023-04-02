@@ -63,21 +63,16 @@ export class InvoiceComponent {
 
   getTotal() {
     this.arrayData.controls.map((form) => {
-      // console.log(form);
-
+    
       const quantity = form.get('quantity');
       const price = form.get('price');
       const Total = form.get('Total');
-      const discount = form.get('discount');
-      const tax = form.get('tax');
-
+     
       quantity?.valueChanges.pipe(debounceTime(500)).subscribe((value) => {
         const price = form.get('price');
         const newValue = value * price?.value; // example transformation
         Total?.setValue(newValue, { emitEvent: false });
         this.getSubTotal();
-
-        // console.log(value);
       });
 
       price?.valueChanges.pipe(debounceTime(500)).subscribe((value) => {
@@ -85,19 +80,39 @@ export class InvoiceComponent {
         const newValue = value * quantity?.value; // example transformation
         Total?.setValue(newValue, { emitEvent: false });
         this.getSubTotal();
-        // console.log(value);
+       
       });
 
-      tax?.valueChanges.pipe(debounceTime(100)).subscribe((value) => {
-        this.getSubTotal();
-        console.log(value, 'changed');
-      });
-
-      discount?.valueChanges.pipe(debounceTime(100)).subscribe((value) => {
-        this.getSubTotal();
-        // console.log(value);
-      });
+     
     });
+
+    const discount = this.createInvoice.get('discount')
+    const tax = this.createInvoice.get('tax')
+    let stotal = this.createInvoice.get('subTotal');
+    let grand_total = this.createInvoice
+      .get('grandTotal')
+      
+    
+    
+     tax?.valueChanges.pipe(debounceTime(500)).subscribe((value:number) => {
+       this.getSubTotal();
+        const newValue =
+          stotal.value +
+          this.createInvoice.value.tax * 0.01 * stotal.value -
+          this.createInvoice.value.discount * 0.01 * stotal.value;   
+grand_total.setValue(newValue,{emitEvent:false})
+       
+     });
+
+     discount?.valueChanges.pipe(debounceTime(500)).subscribe((value:number) => {
+       this.getSubTotal();
+       const newValue =
+         stotal.value -
+         this.createInvoice.value.discount * 0.01 * stotal.value +
+         this.createInvoice.value.tax * 0.01 * stotal.value;
+         
+         grand_total.setValue(newValue, { emitEvent: false });
+     });
   }
 
   getSubTotal() {
@@ -106,20 +121,19 @@ export class InvoiceComponent {
     let ds = this.createInvoice.value.discount;
     this.arrayData.controls.map((form) => {
       const Total = form.get('Total');
-      const discount = form.get('discount');
-      const tax = form.get('tax');
-      stotal = stotal + Total?.value;
-      grand_total =
-        stotal +
-        this.createInvoice.value.discount * 0.01 +
-        this.createInvoice.value.tax * 0.01;
+      
+     stotal = stotal + Total?.value;
+     grand_total =
+       stotal +
+       this.createInvoice.value.discount * 0.01 * stotal +
+       this.createInvoice.value.tax * 0.01 * stotal;
     });
 
     this.createInvoice.get('subTotal').patchValue(stotal);
+
     this.createInvoice.get('grandTotal').patchValue(grand_total);
 
-    console.log('subtotal', stotal);
-    console.log('grandtotal', grand_total);
+   ;
   }
 
   get arrayData(): FormArray {
@@ -148,16 +162,7 @@ export class InvoiceComponent {
   removeItem(index: number) {
     this.arrayData.removeAt(index);
   }
-  testSubmit() {
-    console.log(this.createInvoice.value);
-  }
-
-  // fileSelect(event: any) {
-  //   this.base = <File>event.target.files[0];
-  //   console.log('selected', this.base);
-  // }
-
-  test() {}
+ 
 
   submit() {
     //  const addCurrentEvent = new FormData();
